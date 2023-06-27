@@ -64,7 +64,7 @@
                                     }
                                 }) (window, document, function () {
                                     try {
-                                        var node = document.createElement ('style'); 
+                                        const node = document.createElement ('style'); 
                                         const textnode = document.createTextNode (${backtics}); 
                                         node.appendChild (textnode); 
                                         document.head.appendChild (node);
@@ -76,7 +76,21 @@
                             reslut += createStrF?.trim ();
                         } 
                     });
-                    await console.log (reslut?.trim ());
+                    if (reslut) {
+                        if (!window.Babel) {
+                            fetch ("https://unpkg.com/@babel/standalone/babel.min.js"). then (function (res) {
+                                return res.text ();
+                            }).then (function (babelCDN) {
+                                eval (babelCDN);
+                                var babel_result = Babel.transform (reslut?.trim (), { presets: ['es2015'] });
+                                console.log (babel_result.code);
+                            }). catch (function (error) {
+                                console.log (reslut); 
+                            });
+                        } else {
+                            console.log (reslut); 
+                        }
+                    }
                 })();
             });
         }
